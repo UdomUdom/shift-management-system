@@ -47,3 +47,16 @@ export const deleteLeave = async (id: number) => {
     .returning();
   return deletedLeave;
 };
+
+export const updateLeaveStatus = async (
+  id: number,
+  status: "approved" | "rejected",
+  headNurseId: string
+) => {
+  const updated = await db
+    .update(table.leaveRequests)
+    .set({ status, approvedBy: headNurseId })
+    .where(eq(table.leaveRequests.id, id))
+    .returning();
+  return updated;
+};
