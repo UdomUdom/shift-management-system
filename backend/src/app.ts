@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { swaggerUI } from "@hono/swagger-ui";
 import routes from "./routes/index";
-import { param } from "drizzle-orm";
 
 const openApiDoc = {
   openapi: "3.0.0", // This is the required version field
@@ -40,6 +39,42 @@ const openApiDoc = {
         },
       },
     },
+    "/api/shifts": {
+      get: {
+        summary: "Get all shifts",
+        responses: {
+          "200": {
+            description: "List of shifts",
+          },
+        },
+      },
+      post: {
+        summary: "Create a new shift",
+        responses: {
+          "201": {
+            description: "Shift created",
+          },
+        },
+      },
+    },
+    "/api/leave": {
+      get: {
+        summary: "Get all leave requests",
+        responses: {
+          "200": {
+            description: "List of leave requests",
+          },
+        },
+      },
+      post: {
+        summary: "Create a new leave request",
+        responses: {
+          "201": {
+            description: "Leave request created",
+          },
+        },
+      },
+    },
 
     // Add more endpoints as needed
   },
@@ -54,5 +89,7 @@ app.get("/", (c) => {
 app.get("/doc", (c) => c.json(openApiDoc));
 
 app.get("/swagger", swaggerUI({ url: "/doc" }));
+
+app.route("/api", routes);
 
 export default app;

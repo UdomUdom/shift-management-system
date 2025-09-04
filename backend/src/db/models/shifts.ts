@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ShiftSchema = z.object({
-  date: z.string().date({ message: "invalid date" }),
+  date: z.coerce.date({ message: "invalid date" }),
   start_time: z.string().datetime({ message: "invalid date" }),
   end_time: z.string().datetime({ message: "invalid date" }),
 });

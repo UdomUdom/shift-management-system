@@ -8,6 +8,8 @@ const connectionString =
     throw new Error("DATABASE_URL is not defined");
   })();
 
-export const db = drizzle(new Pool({ connectionString }), { schema });
+const pool = new Pool({ connectionString });
+const dbInstance = drizzle(pool, { schema });
 
-export default drizzle(new Pool({ connectionString }), { schema });
+export const db = dbInstance;
+export default dbInstance;

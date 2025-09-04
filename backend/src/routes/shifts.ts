@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { ShiftSchema, ShiftType } from "../db/models/shifts";
 
-const shiftRouter = new Hono();
+export const shiftRouter = new Hono();
 
 shiftRouter.get("/", (c) => {
   return c.json({ message: "List of shifts" });

@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { LeaveSchema, LeaveType } from "../db/models/leave";
 
-const leaveRouter = new Hono();
+export const leaveRouter = new Hono();
 
 leaveRouter.get("/", (c) => {
   return c.json({ message: "List of leaves" });

@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { UserType } from "../db/models/users";
+import { UserSchema, UserType } from "../db/models/users";
 import * as service from "../services/users";
 
 export const userRouter = new Hono();
@@ -10,8 +10,12 @@ userRouter.get("/", async (c) => {
 });
 
 userRouter.post("/", async (c) => {
-  const user = (await c.req.json()) as UserType;
-  const newUser = await service.createUser(user);
+  const body = await c.req.json();
+  const parsed = UserSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({ message: "Invalid user payload", issues: parsed.error.issues }, 400);
+  }
+  const newUser = await service.createUser(parsed.data);
   return c.json(newUser);
 });
 
@@ -29,7 +33,7 @@ userRouter.put("/:email", async (c) => {
   const userUpdates = (await c.req.json()) as Partial<UserType>;
   const updatedUser = await service.updateUser(email, userUpdates);
   if (updatedUser.length === 0) {
-    return c.json({ message: "User not found" });
+    return c.json({ message: "User not found" }, 404);
   }
   return c.json(updatedUser);
 });
@@ -38,7 +42,7 @@ userRouter.delete("/:email", async (c) => {
   const { email } = c.req.param();
   const deletedUser = await service.deleteUser(email);
   if (deletedUser.length === 0) {
-    return c.json({ message: "User not found" });
+    return c.json({ message: "User not found" }, 404);
   }
   return c.json(deletedUser);
 });
