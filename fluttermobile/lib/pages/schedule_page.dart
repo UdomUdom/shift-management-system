@@ -30,8 +30,10 @@ class _SchedulePageState extends State<SchedulePage> {
     final now = DateTime.now();
     final start = now.subtract(Duration(days: now.weekday - 1)); // Monday
     final end = start.add(const Duration(days: 6)); // Sunday
-    return (DateTime(start.year, start.month, start.day),
-        DateTime(end.year, end.month, end.day));
+    return (
+      DateTime(start.year, start.month, start.day),
+      DateTime(end.year, end.month, end.day),
+    );
   }
 
   @override
@@ -44,20 +46,15 @@ class _SchedulePageState extends State<SchedulePage> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snap.hasError) {
-          return Center(
-            child: Text('โหลดตารางเวรล้มเหลว: ${snap.error}'),
-          );
+          return Center(child: Text('โหลดตารางเวรล้มเหลว: ${snap.error}'));
         }
-        final items = (snap.data ?? [])
-            .where((a) => a.date != null)
-            .where((a) {
+        final items = (snap.data ?? []).where((a) => a.date != null).where((a) {
           final d = a.date!;
           final day = DateTime(d.year, d.month, d.day);
           return day.isAtSameMomentAs(weekStart) ||
               (day.isAfter(weekStart) && day.isBefore(weekEnd)) ||
               day.isAtSameMomentAs(weekEnd);
-        }).toList()
-          ..sort((a, b) => a.date!.compareTo(b.date!));
+        }).toList()..sort((a, b) => a.date!.compareTo(b.date!));
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -82,7 +79,8 @@ class _SchedulePageState extends State<SchedulePage> {
                           leading: const Icon(Icons.event_available_outlined),
                           title: Text(_fmtDate(a.date!)),
                           subtitle: Text(
-                              'เวลา: ${a.startTime ?? '-'} - ${a.endTime ?? '-'}'),
+                            'เวลาเริ่ม: ${a.startTime ?? '-'} \n เวลาเลิก: ${a.endTime ?? '-'}',
+                          ),
                           trailing: Text('#${a.assignmentId}'),
                         );
                       },
