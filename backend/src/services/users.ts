@@ -25,11 +25,25 @@ export const getUserByEmail = async (email: string) => {
       name: true,
       email: true,
       role: true,
-      password: false,
       createdAt: true,
     },
   });
 
+  return user;
+};
+
+export const getUserWithPasswordByEmail = async (email: string) => {
+  const user = await db.query.users.findFirst({
+    where: eq(table.users.email, email),
+    columns: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      password: true,
+    },
+  });
   return user;
 };
 

@@ -92,4 +92,27 @@ app.get("/swagger", swaggerUI({ url: "/doc" }));
 
 app.route("/api", routes);
 
+// Global error handling
+app.onError((err, c) => {
+  console.error(err);
+  return c.json(
+    {
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: err instanceof Error ? err.message : "Unexpected error",
+      },
+    },
+    500
+  );
+});
+
+app.notFound((c) =>
+  c.json(
+    {
+      error: { code: "NOT_FOUND", message: "Route not found" },
+    },
+    404
+  )
+);
+
 export default app;
